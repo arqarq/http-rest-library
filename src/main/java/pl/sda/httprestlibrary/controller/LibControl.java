@@ -2,10 +2,7 @@ package pl.sda.httprestlibrary.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.sda.httprestlibrary.model.Book;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +11,7 @@ import java.util.List;
 
 @RestController
 public class LibControl {
-    private final List<Book> bookList = new LinkedList<>();
+    private List<Book> bookList = new LinkedList<>();
 
     private boolean checkIfAlreadyAdded(Object o) {
         if (o instanceof Book) {
@@ -28,6 +25,40 @@ public class LibControl {
             }
         }
         return false;
+    }
+
+    private boolean checkIfAlreadyAddedByTitle(String title) {
+        for (Book entry : bookList) {
+            if (entry.getName().equals(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @PatchMapping("/{i}/{a}")
+    ResponseEntity<String> updateStatus(@PathVariable("i") String title, @PathVariable("a") String available) {
+        if (checkIfAlreadyAddedByTitle(title)) {
+            if (available.equals("0")) {
+                bookList.stream()
+                        .filter(book -> book.getName().equals(title))
+                        .findFirst()
+                        .ifPresent(book -> book.setAvailable(false));
+                return new ResponseEntity<>("Status of book titled: \"" + title + "\" set to: unavailable.",
+                        HttpStatus.OK);
+            } else if (available.equals("1")) {
+                bookList.stream()
+                        .filter(book -> book.getName().equals(title))
+                        .findFirst()
+                        .ifPresent(book -> book.setAvailable(true));
+                return new ResponseEntity<>("Status of book titled: \"" + title + "\" set to: available.",
+                        HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Status to set not known.", HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>("No book titled: \"" + title + "\" in library.",
+                HttpStatus.OK);
     }
 
     @GetMapping()
@@ -46,7 +77,7 @@ public class LibControl {
     }
 
     @PutMapping
-    ResponseEntity<HttpStatus> addBook(@RequestBody Book book) {
+    ResponseEntity<?> addBook(@RequestBody Book book) {
         if (!checkIfAlreadyAdded(book)) {
             bookList.add(book);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
