@@ -90,7 +90,7 @@ class LibControl {
 //        book.setAvailable(true);
 //        bookList.add(book);
         response.addHeader("Arek", "Sekula");
-        return new ResponseEntity<>(bookList, HttpStatus.I_AM_A_TEAPOT);
+        return new ResponseEntity<>(bookList, HttpStatus.OK);
     }
 
     @PutMapping
