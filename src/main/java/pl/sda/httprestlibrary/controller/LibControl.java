@@ -3,6 +3,7 @@ package pl.sda.httprestlibrary.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.sda.httprestlibrary.model.Author;
 import pl.sda.httprestlibrary.model.Book;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,9 @@ public class LibControl {
     }
 
     @PatchMapping("/{i}/{a}")
-    ResponseEntity<String> updateStatus(@PathVariable("i") String title, @PathVariable("a") String available) {
+    ResponseEntity<String> updateStatus(@PathVariable("i") String title,
+                                        @PathVariable("a") String available,
+                                        @RequestBody Author author) {
         if (checkIfAlreadyAddedByTitle(title)) {
             if (available.equals("0")) {
                 bookList.stream()
@@ -52,6 +55,13 @@ public class LibControl {
                         .findFirst()
                         .ifPresent(book -> book.setAvailable(true));
                 return new ResponseEntity<>("Status of book titled: \"" + title + "\" set to: available.",
+                        HttpStatus.OK);
+            } else if (available.equals("2")) {
+                bookList.stream()
+                        .filter(book -> book.getName().equals(title))
+                        .findFirst()
+                        .ifPresent(book -> book.setAuthor(author));
+                return new ResponseEntity<>("Author of book titled: \"" + title + "\" has been changed.",
                         HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Status to set not known.", HttpStatus.OK);
