@@ -1,0 +1,16 @@
+{
+    "name": "knigakniga",
+    "author": {
+        "firstName": "AA",
+        "lastName": "BB"
+    },
+    "available": false
+},
+{
+    "firstName": "CC",
+    "lastName": "DD"
+},
+{
+    "firstName": "CC",
+    "lastName": null
+}

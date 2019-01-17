@@ -19,8 +19,8 @@ public class LibControl {
             Book book = (Book) o;
             for (Book entry : bookList) {
                 if (entry.getName().equals(book.getName())
-                        && entry.getAuthor().getFirstname().equals(book.getAuthor().getFirstname())
-                        && entry.getAuthor().getLasttname().equals(book.getAuthor().getLasttname())) {
+                        && entry.getAuthor().getFirstName().equals(book.getAuthor().getFirstName())
+                        && entry.getAuthor().getLastName().equals(book.getAuthor().getLastName())) {
                     return true;
                 }
             }
@@ -39,8 +39,7 @@ public class LibControl {
 
     @PatchMapping("/{i}/{a}")
     ResponseEntity<String> updateStatus(@PathVariable("i") String title,
-                                        @PathVariable("a") String available,
-                                        @RequestBody Author author) {
+                                        @PathVariable("a") String available) {
         if (checkIfAlreadyAddedByTitle(title)) {
             switch (available) {
                 case "0":
@@ -57,16 +56,24 @@ public class LibControl {
                             .ifPresent(book -> book.setAvailable(true));
                     return new ResponseEntity<>("Status of book titled: \"" + title + "\" set to: available.",
                             HttpStatus.OK);
-                case "2":
-                    bookList.stream()
-                            .filter(book -> book.getName().equals(title))
-                            .findFirst()
-                            .ifPresent(book -> book.setAuthor(author));
-                    return new ResponseEntity<>("Author of book titled: \"" + title + "\" has been changed.",
-                            HttpStatus.OK);
                 default:
                     return new ResponseEntity<>("Status to set not known.", HttpStatus.OK);
             }
+        }
+        return new ResponseEntity<>("No book titled: \"" + title + "\" in library.",
+                HttpStatus.OK);
+    }
+
+    @PatchMapping("/{i}/2")
+    ResponseEntity<String> updateAuthor(@PathVariable("i") String title,
+                                        @RequestBody Author author) {
+        if (checkIfAlreadyAddedByTitle(title)) {
+            bookList.stream()
+                    .filter(book -> book.getName().equals(title))
+                    .findFirst()
+                    .ifPresent(book -> book.setAuthor(author));
+            return new ResponseEntity<>("Author of book titled: \"" + title + "\" has been changed.",
+                    HttpStatus.OK);
         }
         return new ResponseEntity<>("No book titled: \"" + title + "\" in library.",
                 HttpStatus.OK);
@@ -76,7 +83,7 @@ public class LibControl {
     ResponseEntity<List<Book>> getAllBooks(HttpServletResponse response) {
 //        Author author = new Author();
 //        Book book = new Book();
-//        author.setFirstname("A");
+//        author.setFirstName("A");
 //        author.setLasttname("B");
 //        book.setAuthor(author);
 //        book.setName("kniga");

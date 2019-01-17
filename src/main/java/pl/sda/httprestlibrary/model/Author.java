@@ -1,22 +1,22 @@
 package pl.sda.httprestlibrary.model;
 
 public class Author {
-    private String firstname;
-    private String lasttname;
+    private String firstName;
+    private String lastName;
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstname) {
+        this.firstName = firstname;
     }
 
-    public String getLasttname() {
-        return lasttname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLasttname(String lasttname) {
-        this.lasttname = lasttname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
