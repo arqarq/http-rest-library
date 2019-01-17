@@ -11,8 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 @RestController
-public class LibControl {
-    private List<Book> bookList = new LinkedList<>();
+class LibControl {
+    private final List<Book> bookList = new LinkedList<>();
 
     private boolean checkIfAlreadyAdded(Object o) {
         if (o instanceof Book) {
@@ -89,7 +89,6 @@ public class LibControl {
 //        book.setName("kniga");
 //        book.setAvailable(true);
 //        bookList.add(book);
-
         response.addHeader("Arek", "Sekula");
         return new ResponseEntity<>(bookList, HttpStatus.I_AM_A_TEAPOT);
     }
@@ -101,5 +100,18 @@ public class LibControl {
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+    }
+
+    @DeleteMapping("/{i}")
+    @ResponseBody
+    String deleteBook(@PathVariable(value = "i") String title) {
+        if (checkIfAlreadyAddedByTitle(title)) {
+            bookList.stream()
+                    .filter(book -> book.getName().equals(title))
+                    .findFirst()
+                    .ifPresent(bookList::remove);
+            return "Book titled: \"" + title + "\" has been removed.";
+        }
+        return "No book titled: \"" + title + "\" in library.";
     }
 }
