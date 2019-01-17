@@ -42,29 +42,30 @@ public class LibControl {
                                         @PathVariable("a") String available,
                                         @RequestBody Author author) {
         if (checkIfAlreadyAddedByTitle(title)) {
-            if (available.equals("0")) {
-                bookList.stream()
-                        .filter(book -> book.getName().equals(title))
-                        .findFirst()
-                        .ifPresent(book -> book.setAvailable(false));
-                return new ResponseEntity<>("Status of book titled: \"" + title + "\" set to: unavailable.",
-                        HttpStatus.OK);
-            } else if (available.equals("1")) {
-                bookList.stream()
-                        .filter(book -> book.getName().equals(title))
-                        .findFirst()
-                        .ifPresent(book -> book.setAvailable(true));
-                return new ResponseEntity<>("Status of book titled: \"" + title + "\" set to: available.",
-                        HttpStatus.OK);
-            } else if (available.equals("2")) {
-                bookList.stream()
-                        .filter(book -> book.getName().equals(title))
-                        .findFirst()
-                        .ifPresent(book -> book.setAuthor(author));
-                return new ResponseEntity<>("Author of book titled: \"" + title + "\" has been changed.",
-                        HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Status to set not known.", HttpStatus.OK);
+            switch (available) {
+                case "0":
+                    bookList.stream()
+                            .filter(book -> book.getName().equals(title))
+                            .findFirst()
+                            .ifPresent(book -> book.setAvailable(false));
+                    return new ResponseEntity<>("Status of book titled: \"" + title + "\" set to: unavailable.",
+                            HttpStatus.OK);
+                case "1":
+                    bookList.stream()
+                            .filter(book -> book.getName().equals(title))
+                            .findFirst()
+                            .ifPresent(book -> book.setAvailable(true));
+                    return new ResponseEntity<>("Status of book titled: \"" + title + "\" set to: available.",
+                            HttpStatus.OK);
+                case "2":
+                    bookList.stream()
+                            .filter(book -> book.getName().equals(title))
+                            .findFirst()
+                            .ifPresent(book -> book.setAuthor(author));
+                    return new ResponseEntity<>("Author of book titled: \"" + title + "\" has been changed.",
+                            HttpStatus.OK);
+                default:
+                    return new ResponseEntity<>("Status to set not known.", HttpStatus.OK);
             }
         }
         return new ResponseEntity<>("No book titled: \"" + title + "\" in library.",
