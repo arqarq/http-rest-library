@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 class LibControl {
     private final List<Book> bookList = new LinkedList<>();
-    private String title;
 
     private boolean checkIfAlreadyAdded(Object o) {
         if (o instanceof Book) {
