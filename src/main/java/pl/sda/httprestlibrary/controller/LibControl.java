@@ -39,8 +39,8 @@ class LibControl {
     }
 
     @PatchMapping("/{i}/{a}")
-    ResponseEntity<String> updateStatus(@PathVariable("i") String title,
-                                        @PathVariable("a") String available) {
+    public ResponseEntity<String> updateStatus(@PathVariable("i") String title,
+                                               @PathVariable("a") String available) {
         if (checkIfAlreadyAddedByTitle(title)) {
             switch (available) {
                 case "0":
@@ -66,8 +66,8 @@ class LibControl {
     }
 
     @PatchMapping("/{i}/2")
-    ResponseEntity<String> updateAuthor(@PathVariable("i") String title,
-                                        @RequestBody Author author) {
+    public ResponseEntity<String> updateAuthor(@PathVariable("i") String title,
+                                               @RequestBody Author author) {
         if (checkIfAlreadyAddedByTitle(title)) {
             bookList.stream()
                     .filter(book -> book.getName().equals(title))
@@ -81,7 +81,7 @@ class LibControl {
     }
 
     @GetMapping()
-    ResponseEntity<List<Book>> getAllBooks(HttpServletResponse response) {
+    public ResponseEntity<List<Book>> getAllBooks(HttpServletResponse response) {
 //        Author author = new Author();
 //        Book book = new Book();
 //        author.setFirstName("A");
@@ -95,7 +95,7 @@ class LibControl {
     }
 
     @PutMapping
-    ResponseEntity<?> addBook(@RequestBody Book book) {
+    public ResponseEntity<?> addBook(@RequestBody Book book) {
         if (!checkIfAlreadyAdded(book)) {
             bookList.add(book);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -103,9 +103,10 @@ class LibControl {
         return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
     }
 
-    @DeleteMapping("/{i}")
+    //    @RequestMapping(value = "/{i}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{title}")
     @ResponseBody
-    String deleteBook(@PathVariable(value = "i") String title) {
+    public String deleteBook(@PathVariable("title") String title) {
         if (checkIfAlreadyAddedByTitle(title)) {
             bookList.stream()
                     .filter(book -> book.getName().equals(title))
