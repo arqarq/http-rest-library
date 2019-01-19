@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 class LibControl {
     private final List<Book> bookList = new LinkedList<>();
+    private String title;
 
     private boolean checkIfAlreadyAdded(Object o) {
         if (o instanceof Book) {
@@ -20,7 +21,8 @@ class LibControl {
             for (Book entry : bookList) {
                 if (entry.getName().equals(book.getName())
                         && entry.getAuthor().getFirstName().equals(book.getAuthor().getFirstName())
-                        && entry.getAuthor().getLastName().equals(book.getAuthor().getLastName())) {
+                        && entry.getAuthor().getLastName().equals(book.getAuthor().getLastName())
+                ) {
                     return true;
                 }
             }
